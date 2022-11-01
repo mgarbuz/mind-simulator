@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title></title>
+  <style type='text/css'>
+    #test{
+    display:none;
+}
+  </style>
+  
+</head>
+<body>
+
+<h1><time>00:00:00</time></h1>
+<button id="strt">start</button>
+<button id="agn">again</button>
+<button id="nxt">next</button>
+<button id="chk">chekc</button>
+
+
+
+<canvas id="myCanvas" width="420" height="200">
+            Ваш браузер не поддерживает Canvas
+        </canvas>
+		
+<script type='text/javascript'>
+
+
+
+
+const color= ['red','green','yellow'];
+var image = document.getElementById("myCanvas");
+var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));
+var p=0;
+
+var i = 0, s = ["block","none"],t = [2000,1000]; //2 сек есть картинка, 1 сек нет
+var count=0;
+var canvas = document.getElementById("myCanvas"), 
+                context = canvas.getContext('2d');
+            
+
+window.onload=function(){
+
+var h1 = document.getElementsByTagName('h1')[0];
+var start = document.getElementById('strt');
+var next = document.getElementById('nxt');
+var chekc = document.getElementById('chk');
+var again = document.getElementById('agn');
+var milisec = 0;
+var sec = 0;
+var min = 0;
+var time;
+
+function tick(){
+    milisec+=10;
+    if (milisec >= 100) {
+        milisec = 0;
+        sec++;
+        if (sec >= 60) {
+            sec = 0;
+            min++;
+        }
+    }
+}
+function add() {
+    tick();
+    h1.textContent = (min > 9 ? min : "0" + min) 
+        	 + ":" + (sec > 9 ? sec : "0" + sec)
+       		 + ":" + (milisec > 9 ? milisec : "0" + milisec);
+    timer();
+}
+function timer() {
+    time = setTimeout(add, 100);
+}
+
+//timer();
+//show();
+start.onclick = function() {
+timer();
+show();
+}
+chekc.onclick = function() {
+    clearTimeout(time);
+}
+reset.onclick = function() {
+    h1.textContent = "00:00:00";
+    seconds = 0; milisec = 0; min = 0;
+}
+again.onclick = function() {
+   p=0;
+   count=0;
+   i=0;
+   show();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function show()
+{ 
+ i ^= 1
+	if(i==0) {
+		p+=3;
+	}
+   image.style.display = s[i];
+   if (count < 10) {
+    count+=1;
+    setTimeout(show,t[i]);
+	}
+	
+	
+	
+
+
+			
+            context.beginPath();
+            context.arc(60, 90, 50, 0, Math.PI*2, false);
+            context.closePath();
+            context.stroke();
+			context.fillStyle = color[randoms[p]];
+			context.fill();
+		
+			
+             
+            context.beginPath();
+            context.arc(200, 90, 50, 0, Math.PI*2, false);
+            context.closePath();
+            context.stroke();
+			context.fillStyle = color[randoms[p+1]];
+			context.fill();
+
+             
+             
+            context.beginPath();
+            context.arc(350, 90, 50, 0, Math.PI*2, false);
+            context.closePath();
+            context.stroke();
+			context.fillStyle = color[randoms[p+2]];
+			context.fill();	
+}
+
+//show()
+
+
+
+}					
+</script>
+    </body>
+</html>
