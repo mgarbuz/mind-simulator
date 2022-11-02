@@ -7,7 +7,38 @@
             #test{
                 display:none;
             }
-
+            #circle_red {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: red;
+    }
+      #circle_yellow {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: yellow;
+    }
+      #circle_green {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: green;
+    }
+      #circle_grey {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: grey;
+    }
     </style>
 
 </head>
@@ -16,10 +47,11 @@
 <h1>
     <time>00:00:00</time>
 </h1>
+<div id="main_panel"/>
 <button id="strt">start</button>
 <button id="agn">again</button>
 <button id="nxt">next</button>
-<button id="chk">chekc</button>
+<button id="chk">check</button>
 
 
 <canvas id="myCanvas" width="700" height="200">
@@ -40,6 +72,18 @@
             var count = 0;
             var canvas = document.getElementById("myCanvas"), 
             context = canvas.getContext('2d');
+            
+            function switchColor(number) {
+               var str_res = "";
+               var color = document.getElementById('data_' + number).innerHTML;
+               var r = color;
+               if(r == 0) str_res += "<div id=\"circle_red\"></div>";
+               if(r == 1) str_res += "<div id=\"circle_yellow\"></div>";
+               if(r == 2) str_res += "<div id=\"circle_green\"></div>";
+               color++;
+               document.getElementById("data_" + number).innerHTML=color%3;
+               document.getElementById("circle_" + number).innerHTML = str_res;
+        }
 
 
             window.onload = function(){
@@ -47,7 +91,7 @@
             var h1 = document.getElementsByTagName('h1')[0];
             var start = document.getElementById('strt');
             var next = document.getElementById('nxt');
-            var chekc = document.getElementById('chk');
+            var check = document.getElementById('chk');
             var again = document.getElementById('agn');
             var milisec = 0;
             var sec = 0;
@@ -89,8 +133,9 @@
 		    show();
             }
 
-            chekc.onclick = function() {
+            check.onclick = function() {
             	clearTimeout(time);
+               document.getElementById("main_panel").innerHTML=generateTable();
             }
 
             reset.onclick = function() {
@@ -163,7 +208,30 @@
 
             //show()
 
-
+            function generateTable() {
+               var result = "<table>" 
+                            + generateRow(0)
+                            + generateRow(5)
+                            + generateRow(10)
+                            + generateRow(15)
+                            + "</table>";
+               return result;
+        }
+        function generateRow(row) {
+               var result = "<tr>" 
+                          + generateCell(row+0) + generateCell(row+1) + generateCell(row+2) + generateCell(row+3) + generateCell(row+4)
+			   + "</tr>";
+               return result;
+        }
+        function generateCell(id) {
+               var result = "<th id=\""+id + "\" onclick=\"switchColor('" + id + "')\">\
+                   <div id=\"data_" + id + "\" style=\"display:none\">" + 0 + "</div>\
+                   <div id=\"circle_" + id + "\">\
+                        <div id=\"circle_grey\"></div>\
+                   </div>\
+               </th>";
+               return result;
+        }
 
             }					
 
