@@ -2,98 +2,152 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title></title>
-  <style type='text/css'>
-    #test{
-    display:none;
-}
-  </style>
-  
+
+<style>
+      #circle_red {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: red;
+	  border: 1px solid #000
+    }
+	#circle_yellow {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: yellow;
+	  border: 1px solid #000
+    }
+	#circle_green {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: green;
+	  border: 1px solid #000
+    }
+	#circle_white {
+      width: 50px;
+      height: 50px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 25px;
+      background: white;
+	  border: 1px solid #000
+    }
+    </style>
+
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <style type='text/css'>
+            #test{
+                display:none;
+            }
+
+    </style>
+
 </head>
 <body>
 
-<h1><time>00:00:00</time></h1>
+<h1>
+    <time>00:00:00</time>
+</h1>
 <button id="strt">start</button>
 <button id="agn">again</button>
 <button id="nxt">next</button>
 <button id="chk">chekc</button>
 
 
+<canvas id="myCanvas" width="700" height="200">
+    Ваш браузер не поддерживает Canvas
+</canvas>
 
-<canvas id="myCanvas" width="420" height="200">
-            Ваш браузер не поддерживает Canvas
-        </canvas>
-		
 <script type='text/javascript'>
 
 
 
 
-const color= ['red','green','yellow'];
-var image = document.getElementById("myCanvas");
-var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));
-var p=0;
+            const color= ['red','green','yellow'];
+            var image = document.getElementById("myCanvas");
+            var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));
+            var p = 0;
 
-var i = 0, s = ["block","none"],t = [2000,1000]; //2 сек есть картинка, 1 сек нет
-var count=0;
-var canvas = document.getElementById("myCanvas"), 
-                context = canvas.getContext('2d');
+            var i = 0, s = ["block","none"], t = [2000,1000]; //2 сек есть картинка, 1 сек нет
+            var count = 0;
+            var canvas = document.getElementById("myCanvas"), 
+            context = canvas.getContext('2d');
+
+
+            window.onload = function(){
+
+            var h1 = document.getElementsByTagName('h1')[0];
+            var start = document.getElementById('strt');
+            var next = document.getElementById('nxt');
+            var chekc = document.getElementById('chk');
+            var again = document.getElementById('agn');
+            var milisec = 0;
+            var sec = 0;
+            var min = 0;
+            var time;
             
+            function clearTime() {
+                   milisec = 0; sec = 0; min = 0;
+            }
 
-window.onload=function(){
+            function tick(){
+		    milisec+=10;
+		    if (milisec >= 100) {
+			    milisec = 0;
+			    sec++;
+			    if (sec >= 60) {
+				    sec = 0;
+				    min++;
+			    }
+		    }
+            }
 
-var h1 = document.getElementsByTagName('h1')[0];
-var start = document.getElementById('strt');
-var next = document.getElementById('nxt');
-var chekc = document.getElementById('chk');
-var again = document.getElementById('agn');
-var milisec = 0;
-var sec = 0;
-var min = 0;
-var time;
+            function add() {
+		    tick();
+		    h1.textContent = (min > 9 ? min : "0" + min) 
+		    + ":" + (sec > 9 ? sec : "0" + sec)
+		    + ":" + (milisec > 9 ? milisec : "0" + milisec);
+		    timer();
+            }
 
-function tick(){
-    milisec+=10;
-    if (milisec >= 100) {
-        milisec = 0;
-        sec++;
-        if (sec >= 60) {
-            sec = 0;
-            min++;
-        }
-    }
-}
-function add() {
-    tick();
-    h1.textContent = (min > 9 ? min : "0" + min) 
-        	 + ":" + (sec > 9 ? sec : "0" + sec)
-       		 + ":" + (milisec > 9 ? milisec : "0" + milisec);
-    timer();
-}
-function timer() {
-    time = setTimeout(add, 100);
-}
+            function timer() {
+            	time = setTimeout(add, 100);
+            }
 
-//timer();
-//show();
-start.onclick = function() {
-timer();
-show();
-}
-chekc.onclick = function() {
-    clearTimeout(time);
-}
-reset.onclick = function() {
-    h1.textContent = "00:00:00";
-    seconds = 0; milisec = 0; min = 0;
-}
-again.onclick = function() {
-   p=0;
-   count=0;
-   i=0;
-   show();
-}
+            //timer();
+            //show();
+            start.onclick = function() {
+			clearInterval();
+		    timer();
+		    show();
+            }
+
+            chekc.onclick = function() {
+            	//clearTimeout(time);
+				image.style.display = "none";
+            }
+
+            next.onclick = function() {
+			image.style.display = "none";
+			p=14;
+			phase2();
+            }
+            again.onclick = function() {
+		    p=0;
+		    count=0;
+		    i=0;
+		    show();
+            }
 
 
 
@@ -107,56 +161,76 @@ again.onclick = function() {
 
 
 
+            function drawCircle(i, j, k, l , color) {
+                   context.beginPath();
+		    context.arc(i, j, k, l, Math.PI*2, false);
+		    context.closePath();
+		    context.stroke();
+		    context.fillStyle = color;
+		    context.fill();
+            }
 
+            function show()
+            { 
+		    i ^= 1
+		    if(i == 0) {
+		    	p += 3;
+		    }
+		    image.style.display = s[i];
+		    
+		    if (count < 10) {
+			count += 1;
+			setTimeout(show,t[i]);
+		    } else {
+			//phase2();
+			//timer();
+		    }
 
-function show()
-{ 
- i ^= 1
-	if(i==0) {
-		p+=3;
-	}
-   image.style.display = s[i];
-   if (count < 10) {
-    count+=1;
-    setTimeout(show,t[i]);
-	}
-	
-	
-	
+                   drawCircle(60, 90, 50, 0, color[randoms[p]]);
+                   drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
+                   drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
+            }
 
-
-			
-            context.beginPath();
-            context.arc(60, 90, 50, 0, Math.PI*2, false);
-            context.closePath();
-            context.stroke();
-			context.fillStyle = color[randoms[p]];
-			context.fill();
-		
-			
+	     function phase2() {
+                   //clearTime();
+                   setTimeout(phase3, 1000);
+	     }
              
-            context.beginPath();
-            context.arc(200, 90, 50, 0, Math.PI*2, false);
-            context.closePath();
-            context.stroke();
-			context.fillStyle = color[randoms[p+1]];
-			context.fill();
+             function phase3() {
+                   //clearTimeout(time);
+                   drawCircle(60, 90, 50, 0, color[randoms[p]]);
+                   drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
+                   drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
+                   drawCircle(500, 90, 50, 0, color[randoms[p+3]]);
+                   drawCircle(650, 90, 50, 0, color[randoms[p+4]]);
+                   image.style.display = "block";
+             }
 
-             
-             
-            context.beginPath();
-            context.arc(350, 90, 50, 0, Math.PI*2, false);
-            context.closePath();
-            context.stroke();
-			context.fillStyle = color[randoms[p+2]];
-			context.fill();	
-}
+            //show()
 
-//show()
+            }					
 
-
-
-}					
 </script>
-    </body>
+
+<div id="data1" style="display:none">0</div>
+    <div id="main_panel" onclick="test()">
+    <div id="circle_white" style="display:none">
+	</div>
+    </div>
+	
+<script type="text/javascript">
+        function test() {
+               var str_res = "";
+               var color = document.getElementById('data1').innerHTML;
+               var r = color;
+               if(r == 0) str_res += "<div id=\"circle_red\"></div>";
+               if(r == 1) str_res += "<div id=\"circle_yellow\"></div>";
+               if(r == 2) str_res += "<div id=\"circle_green\"></div>";
+			   if(r == 3) str_res += "<div id=\"circle_white\"></div>";
+               color++;
+               document.getElementById("data1").innerHTML=color%4
+               document.getElementById("main_panel").innerHTML = str_res;
+        }
+    </script>	
+</body>
 </html>
