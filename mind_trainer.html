@@ -1,10 +1,13 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-
-<style>
-      #circle_red {
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title></title>
+    <style type='text/css'>
+            #test{
+                display:none;
+            }
+            #circle_red {
       width: 50px;
       height: 50px;
       -webkit-border-radius: 25px;
@@ -13,7 +16,7 @@
       background: red;
 	  border: 1px solid #000
     }
-	#circle_yellow {
+      #circle_yellow {
       width: 50px;
       height: 50px;
       -webkit-border-radius: 25px;
@@ -22,7 +25,7 @@
       background: yellow;
 	  border: 1px solid #000
     }
-	#circle_green {
+      #circle_green {
       width: 50px;
       height: 50px;
       -webkit-border-radius: 25px;
@@ -31,7 +34,7 @@
       background: green;
 	  border: 1px solid #000
     }
-	#circle_white {
+      #circle_grey {
       width: 50px;
       height: 50px;
       -webkit-border-radius: 25px;
@@ -42,26 +45,18 @@
     }
     </style>
 
-
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <title></title>
-    <style type='text/css'>
-            #test{
-                display:none;
-            }
-
-    </style>
-
 </head>
 <body>
 
 <h1>
     <time>00:00:00</time>
 </h1>
+<div id="main_panel"/>
+<div id="second_panel"/>
 <button id="strt">start</button>
 <button id="agn">again</button>
 <button id="nxt">next</button>
-<button id="chk">chekc</button>
+<button id="chk">check</button>
 
 
 <canvas id="myCanvas" width="700" height="200">
@@ -75,13 +70,50 @@
 
             const color= ['red','green','yellow'];
             var image = document.getElementById("myCanvas");
-            var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));
+            var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));	
+			for (var j = 0; j < 17; j+=3) {//проверка того, что нет трёх одинаковых цветов подряд в первой фазе
+				if((randoms[j]==randoms[j+1]) && (randoms[j+1]==randoms[j+2])){
+					randoms[j]=0;
+					randoms[j+1]=2;
+					randoms[j+2]=1;
+					}
+				}
+
+			for (var j = 0; j < 12; j+=3) {//проверка того, что нет двух подряд одинаковых троек. НЕ РАБОТАЕТ
+				if((randoms[j]==randoms[j+3]) && (randoms[j+1]==randoms[j+4])&& (randoms[j+2]==randoms[j+5])){
+					randoms[j]=0;
+					randoms[j+1]=2;
+					randoms[j+1]=1;
+					randoms[j+3]=1;
+					randoms[j+4]=2;
+					randoms[j+5]=0;
+					}
+				}	
+			for (var j = 15; j < 18; j++) {//проверка того, что в последних пяти кружках нет трёх подряд одинаковых цветов
+				if((randoms[j]==randoms[j+1]) && (randoms[j+1]==randoms[j+2])){
+					randoms[j]=1;
+					randoms[j+1]=0;
+					randoms[j+2]=2;
+					}
+				}				
             var p = 0;
 
             var i = 0, s = ["block","none"], t = [2000,1000]; //2 сек есть картинка, 1 сек нет
             var count = 0;
             var canvas = document.getElementById("myCanvas"), 
             context = canvas.getContext('2d');
+            
+            function switchColor(number) {
+               var str_res = "";
+               var color = document.getElementById('data_' + number).innerHTML;
+               var r = color;
+               if(r == 0) str_res += "<div id=\"circle_red\"></div>";
+               if(r == 1) str_res += "<div id=\"circle_yellow\"></div>";
+               if(r == 2) str_res += "<div id=\"circle_green\"></div>";
+               color++;
+               document.getElementById("data_" + number).innerHTML=color%3;
+               document.getElementById("circle_" + number).innerHTML = str_res;
+        }
 
 
             window.onload = function(){
@@ -89,7 +121,7 @@
             var h1 = document.getElementsByTagName('h1')[0];
             var start = document.getElementById('strt');
             var next = document.getElementById('nxt');
-            var chekc = document.getElementById('chk');
+            var check = document.getElementById('chk');
             var again = document.getElementById('agn');
             var milisec = 0;
             var sec = 0;
@@ -126,15 +158,17 @@
 
             //timer();
             //show();
-            start.onclick = function() {
+			start.onclick = function() {
 			clearInterval();
+			//document.getElementById("main_panel").innerHTML = "<button id='chk'>check</button>";
 		    timer();
 		    show();
             }
 
-            chekc.onclick = function() {
+            check.onclick = function() {
             	//clearTimeout(time);
-				image.style.display = "none";
+               document.getElementById("main_panel").innerHTML=generateTable();
+			   document.getElementById("second_panel").innerHTML="123";
             }
 
             next.onclick = function() {
@@ -151,16 +185,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
             function drawCircle(i, j, k, l , color) {
                    context.beginPath();
 		    context.arc(i, j, k, l, Math.PI*2, false);
@@ -171,7 +195,7 @@
             }
 
             function show()
-            { 
+            {
 		    i ^= 1
 		    if(i == 0) {
 		    	p += 3;
@@ -208,29 +232,34 @@
 
             //show()
 
+            function generateTable() {
+			 document.getElementById("main_panel").innerHTML = "123456";
+               var result = "<table>" 
+                            + generateRow(0)
+                            + generateRow(5)
+                            + generateRow(10)
+                            + generateRow(15)
+                            + "</table>";
+               return result;
+        }
+        function generateRow(row) {
+               var result = "<tr>" 
+                          + generateCell(row+0) + generateCell(row+1) + generateCell(row+2) + generateCell(row+3) + generateCell(row+4)
+			   + "</tr>";
+               return result;
+        }
+        function generateCell(id) {
+               var result = "<th id=\""+id + "\" onclick=\"switchColor('" + id + "')\">\
+                   <div id=\"data_" + id + "\" style=\"display:none\">" + 0 + "</div>\
+                   <div id=\"circle_" + id + "\">\
+                        <div id=\"circle_grey\"></div>\
+                   </div>\
+               </th>";
+               return result;
+        }
+
             }					
 
 </script>
-
-<div id="data1" style="display:none">0</div>
-    <div id="main_panel" onclick="test()">
-    <div id="circle_white" style="display:none">
-	</div>
-    </div>
-	
-<script type="text/javascript">
-        function test() {
-               var str_res = "";
-               var color = document.getElementById('data1').innerHTML;
-               var r = color;
-               if(r == 0) str_res += "<div id=\"circle_red\"></div>";
-               if(r == 1) str_res += "<div id=\"circle_yellow\"></div>";
-               if(r == 2) str_res += "<div id=\"circle_green\"></div>";
-			   if(r == 3) str_res += "<div id=\"circle_white\"></div>";
-               color++;
-               document.getElementById("data1").innerHTML=color%4
-               document.getElementById("main_panel").innerHTML = str_res;
-        }
-    </script>	
 </body>
 </html>
