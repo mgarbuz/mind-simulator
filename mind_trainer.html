@@ -59,7 +59,7 @@
 <button id="chk" style="display:none">check</button>
 </div>
 
-<button id="finish" style="display:none;" onclick="checkResult()">finish</button>
+<button id="finish" style="display:none;">finish</button>
 <div id="result"></div>
 
 <canvas id="myCanvas" width="700" height="200">
@@ -115,7 +115,7 @@
                document.getElementById("data_" + number).innerHTML = color;
                document.getElementById("circle_" + number).innerHTML = str_res;
         }
-            function checkResult() {
+            function checkResult(min, sec, milisec) {
                var score = 0;
                for (let i = 0; i < randoms.length; i++) {
                    var answer = document.getElementById("data_"+i).innerHTML;
@@ -125,7 +125,7 @@
                    score++;
                }
                document.getElementById("result").innerHTML = drawTableByArray(randoms, 4, 5);
-               alert('Ваш результат:' + score);
+               alert('Ваш результат: ' + score + '\nВаше время: ' + (min > 9 ? min : "0" + min) + ':' + sec + ':' + milisec);
             }
 
             function drawTableByArray(array, rows, columns) {
@@ -222,7 +222,7 @@
 			
 			finish.onclick = function() {
 			clearTimeout(time);
-			checkResult();
+			checkResult(min, sec, milisec);
 			document.getElementById("finish").style.display = "none";
             }
 
@@ -235,7 +235,6 @@
 		    context.stroke();
 		    context.fillStyle = color;
 		    context.fill();
-                   console.log(color);
             }
             
             function show() {
