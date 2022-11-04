@@ -51,13 +51,16 @@
 <h1>
     <time>00:00:00</time>
 </h1>
-<div id="main_panel"/>
-<div id="second_panel"/>
+<div id="main_panel"></div>
+<div id="second_panel">
 <button id="strt">start</button>
-<button id="agn">again</button>
-<button id="nxt">next</button>
-<button id="chk">check</button>
+<button id="agn" style="display:none">again</button>
+<button id="nxt" style="display:none">next</button>
+<button id="chk" style="display:none">check</button>
+</div>
 
+<button id="finish" style="display:none;" onclick="checkResult()">finish</button>
+<div id="result"></div>
 
 <canvas id="myCanvas" width="700" height="200">
     Ваш браузер не поддерживает Canvas
@@ -65,10 +68,7 @@
 
 <script type='text/javascript'>
 
-
-
-
-            const color= ['red','green','yellow'];
+            const color= ['red','yellow','green'];
             var image = document.getElementById("myCanvas");
             var randoms = Array.from({length: 20}, () => Math.floor(Math.random() * 3));	
 			for (var j = 0; j < 17; j+=3) {//проверка того, что нет трёх одинаковых цветов подряд в первой фазе
@@ -106,14 +106,44 @@
             function switchColor(number) {
                var str_res = "";
                var color = document.getElementById('data_' + number).innerHTML;
+               color++;
+               color = color%3
                var r = color;
                if(r == 0) str_res += "<div id=\"circle_red\"></div>";
                if(r == 1) str_res += "<div id=\"circle_yellow\"></div>";
                if(r == 2) str_res += "<div id=\"circle_green\"></div>";
-               color++;
-               document.getElementById("data_" + number).innerHTML=color%3;
+               document.getElementById("data_" + number).innerHTML = color;
                document.getElementById("circle_" + number).innerHTML = str_res;
         }
+            function checkResult() {
+               var score = 0;
+               for (let i = 0; i < randoms.length; i++) {
+                   var answer = document.getElementById("data_"+i).innerHTML;
+                   if (answer != randoms[i]) {
+                      break;
+                   }
+                   score++;
+               }
+               document.getElementById("result").innerHTML = drawTableByArray(randoms, 4, 5);
+               alert('Ваш результат:' + score);
+            }
+
+            function drawTableByArray(array, rows, columns) {
+               var result = "<font size='6'>Правильный ответ:</font> \n\n\n <table>";
+               for (let i = 0; i < rows; i++) {
+                   result += "<tr>";
+                   for (let j = 0; j < columns; j++) {
+                       result += "<th>";
+                       var r = array[i*columns + j];
+	               if(r == 0) result += "<div id=\"circle_red\"></div>";
+               	if(r == 1) result += "<div id=\"circle_yellow\"></div>";
+               	if(r == 2) result += "<div id=\"circle_green\"></div>";
+                       result += "</th>";
+                   }
+               }
+               result += "</table>";
+               return result;
+            }
 
 
             window.onload = function(){
@@ -160,6 +190,7 @@
             //show();
 			start.onclick = function() {
 			clearInterval();
+			document.getElementById("strt").style.display = "none";
 			//document.getElementById("main_panel").innerHTML = "<button id='chk'>check</button>";
 		    timer();
 		    show();
@@ -167,20 +198,32 @@
 
             check.onclick = function() {
             	//clearTimeout(time);
+			   image.style.display = "none";
                document.getElementById("main_panel").innerHTML=generateTable();
-			   document.getElementById("second_panel").innerHTML="123";
+               document.getElementById("second_panel").style.display = "none";
+               document.getElementById("finish").style.display = "block";
             }
 
             next.onclick = function() {
 			image.style.display = "none";
+			document.getElementById("nxt").style.display = "none";
+			document.getElementById("agn").style.display = "none";
 			p=14;
 			phase2();
             }
             again.onclick = function() {
+			document.getElementById("nxt").style.display = "none";
+			document.getElementById("agn").style.display = "none";
 		    p=0;
 		    count=0;
 		    i=0;
 		    show();
+            }
+			
+			finish.onclick = function() {
+			clearTimeout(time);
+			checkResult();
+			document.getElementById("finish").style.display = "none";
             }
 
 
@@ -206,6 +249,8 @@
 			count += 1;
 			setTimeout(show,t[i]);
 		    } else {
+			document.getElementById("agn").style.display = "block";
+			document.getElementById("nxt").style.display = "block";
 			//phase2();
 			//timer();
 		    }
@@ -216,24 +261,22 @@
             }
 
 	     function phase2() {
-                   //clearTime();
                    setTimeout(phase3, 1000);
 	     }
              
              function phase3() {
-                   //clearTimeout(time);
                    drawCircle(60, 90, 50, 0, color[randoms[p]]);
                    drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
                    drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
                    drawCircle(500, 90, 50, 0, color[randoms[p+3]]);
                    drawCircle(650, 90, 50, 0, color[randoms[p+4]]);
                    image.style.display = "block";
+				   document.getElementById("chk").style.display = "block";
              }
 
             //show()
 
             function generateTable() {
-			 document.getElementById("main_panel").innerHTML = "123456";
                var result = "<table>" 
                             + generateRow(0)
                             + generateRow(5)
@@ -250,7 +293,7 @@
         }
         function generateCell(id) {
                var result = "<th id=\""+id + "\" onclick=\"switchColor('" + id + "')\">\
-                   <div id=\"data_" + id + "\" style=\"display:none\">" + 0 + "</div>\
+                   <div id=\"data_" + id + "\" style=\"display:none\">" + -1 + "</div>\
                    <div id=\"circle_" + id + "\">\
                         <div id=\"circle_grey\"></div>\
                    </div>\
