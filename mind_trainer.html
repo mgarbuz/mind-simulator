@@ -5,67 +5,107 @@
     <title></title>
     <style type='text/css'>
             #test{
+			width: 100px;
+			height:100px;
                 display:none;
             }
             #circle_red {
-      width: 50px;
-      height: 50px;
+      width: 150px;
+      height: 150px;
       -webkit-border-radius: 25px;
       -moz-border-radius: 25px;
-      border-radius: 25px;
+      border-radius: 125px;
       background: red;
 	  border: 1px solid #000
     }
       #circle_yellow {
-      width: 50px;
-      height: 50px;
+      width: 150px;
+      height: 150px;
       -webkit-border-radius: 25px;
       -moz-border-radius: 25px;
-      border-radius: 25px;
+      border-radius: 125px;
       background: yellow;
 	  border: 1px solid #000
     }
       #circle_green {
-      width: 50px;
-      height: 50px;
+      width: 150px;
+      height: 150px;
       -webkit-border-radius: 25px;
       -moz-border-radius: 25px;
-      border-radius: 25px;
+      border-radius: 125px;
       background: green;
 	  border: 1px solid #000
     }
       #circle_grey {
-      width: 50px;
-      height: 50px;
+      width: 150px;
+      height: 150px;
       -webkit-border-radius: 25px;
       -moz-border-radius: 25px;
-      border-radius: 25px;
+      border-radius: 125px;
       background: white;
 	  border: 1px solid #000
     }
+	
+	
+	
+	.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border: 0px solid black;
+    padding: 20px;
+}
+#con1{
+    width: 150px;
+    border: 0px solid black;
+    background-color: none;
+    height: 150px;
+    border-right: 0px;
+}
+#con2{
+    width: 350px;
+    border: 0px solid black;
+    background-color: none;
+    height: 300px;
+}
+#con3{
+    width: 150px;
+    border: 0px solid black;
+    border-left: 0px;
+    background-color: none;
+    height: 150px;
+}
+
     </style>
 
 </head>
 <body>
+<center>
 
+<font size='6'>
 <h1>
-    <time>00:00:00</time>
-</h1>
+<time>00:00:00</time>
+</h1></font>
 <div id="main_panel"></div>
 <div id="second_panel">
-<button id="strt">start</button>
-<button id="agn" style="display:none">again</button>
-<button id="nxt" style="display:none">next</button>
-<button id="chk" style="display:none">check</button>
+<button id="strt" style="height:100px;width:200px;"><font size='7'>СТАРТ</font></button>
+
+
+<button id="chk" style="display:none;height:100px;width:150px"><font size='7'>ВВОД</font></button>
 </div>
 
-<button id="finish" style="display:none;" onclick="checkResult()">finish</button>
+<button id="finish" style="display:none;height:100px;width:250px"><font size='7'>ФИНИШ</font></button>
 <div id="result"></div>
 
 <canvas id="myCanvas" width="700" height="200">
     Ваш браузер не поддерживает Canvas
 </canvas>
 
+<div class="container">
+    <div id="con1"><button id="agn" style="display:none;height:100px;width:250px"><font size='7'>ПОВТОР</font></button></div>
+    <div id="con2"></div>
+    <div id="con3"><button id="nxt" style="display:none;height:100px;width:250px"><font size='7'>ДАЛЕЕ</font></button></div>
+</div>
 <script type='text/javascript'>
 
             const color= ['red','yellow','green'];
@@ -98,7 +138,7 @@
 				}				
             var p = 0;
 
-            var i = 0, s = ["block","none"], t = [2000,1000]; //2 сек есть картинка, 1 сек нет
+            var i = 0, s = ["block","none"], t = [100,100]; //2 сек есть картинка, 1 сек нет
             var count = 0;
             var canvas = document.getElementById("myCanvas"), 
             context = canvas.getContext('2d');
@@ -115,7 +155,7 @@
                document.getElementById("data_" + number).innerHTML = color;
                document.getElementById("circle_" + number).innerHTML = str_res;
         }
-            function checkResult() {
+            function checkResult(min, sec, milisec) {
                var score = 0;
                for (let i = 0; i < randoms.length; i++) {
                    var answer = document.getElementById("data_"+i).innerHTML;
@@ -125,7 +165,7 @@
                    score++;
                }
                document.getElementById("result").innerHTML = drawTableByArray(randoms, 4, 5);
-               alert('Ваш результат:' + score);
+               alert('Ваш результат: ' + score + '\nВаше время: ' + (min > 9 ? min : "0" + min) + ':' + sec + ':' + milisec);
             }
 
             function drawTableByArray(array, rows, columns) {
@@ -208,7 +248,7 @@
 			image.style.display = "none";
 			document.getElementById("nxt").style.display = "none";
 			document.getElementById("agn").style.display = "none";
-			p=14;
+			p=15;
 			phase2();
             }
             again.onclick = function() {
@@ -222,7 +262,7 @@
 			
 			finish.onclick = function() {
 			clearTimeout(time);
-			checkResult();
+			checkResult(min, sec, milisec);
 			document.getElementById("finish").style.display = "none";
             }
 
@@ -236,29 +276,26 @@
 		    context.fillStyle = color;
 		    context.fill();
             }
-
-            function show()
-            {
-		    i ^= 1
-		    if(i == 0) {
-		    	p += 3;
-		    }
-		    image.style.display = s[i];
-		    
-		    if (count < 10) {
-			count += 1;
-			setTimeout(show,t[i]);
-		    } else {
-			document.getElementById("agn").style.display = "block";
-			document.getElementById("nxt").style.display = "block";
-			//phase2();
-			//timer();
-		    }
-
+            
+            function show() {
+                   if (p >= 15) {
+                      document.getElementById("agn").style.display = "block";
+					  document.getElementById("nxt").style.display = "block";
+                      return;
+                   }                   
                    drawCircle(60, 90, 50, 0, color[randoms[p]]);
                    drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
                    drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
+                   image.style.display = "block";
+                   p += 3;
+                   setTimeout(hide, 2000);
             }
+
+            function hide() {
+                   image.style.display = "none";
+                   setTimeout(show, 1000);
+            }
+            
 
 	     function phase2() {
                    setTimeout(phase3, 1000);
@@ -304,5 +341,7 @@
             }					
 
 </script>
+
+</center>
 </body>
 </html>
