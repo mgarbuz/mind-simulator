@@ -98,7 +98,7 @@
 				}				
             var p = 0;
 
-            var i = 0, s = ["block","none"], t = [2000,1000]; //2 сек есть картинка, 1 сек нет
+            var i = 0, s = ["block","none"], t = [10000,1000]; //2 сек есть картинка, 1 сек нет
             var count = 0;
             var canvas = document.getElementById("myCanvas"), 
             context = canvas.getContext('2d');
@@ -235,30 +235,28 @@
 		    context.stroke();
 		    context.fillStyle = color;
 		    context.fill();
+                   console.log(color);
             }
-
-            function show()
-            {
-		    i ^= 1
-		    if(i == 0) {
-		    	p += 3;
-		    }
-		    image.style.display = s[i];
-		    
-		    if (count < 10) {
-			count += 1;
-			setTimeout(show,t[i]);
-		    } else {
-			document.getElementById("agn").style.display = "block";
-			document.getElementById("nxt").style.display = "block";
-			//phase2();
-			//timer();
-		    }
-
+            
+            function show() {
+                   if (p >= 15) {
+                      document.getElementById("agn").style.display = "block";
+		       document.getElementById("nxt").style.display = "block";
+                      return;
+                   }                   
                    drawCircle(60, 90, 50, 0, color[randoms[p]]);
                    drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
                    drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
+                   image.style.display = "block";
+                   p += 3;
+                   setTimeout(hide, 2000);
             }
+
+            function hide() {
+                   image.style.display = "none";
+                   setTimeout(show, 1000);
+            }
+            
 
 	     function phase2() {
                    setTimeout(phase3, 1000);
