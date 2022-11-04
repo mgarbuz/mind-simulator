@@ -18,6 +18,16 @@
       background: red;
 	  border: 1px solid #000
     }
+    
+    #circle_red_right {
+      width: 150px;
+      height: 150px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 125px;
+      background: red;
+	  border: 5px solid #090
+    }
       #circle_yellow {
       width: 150px;
       height: 150px;
@@ -27,6 +37,15 @@
       background: yellow;
 	  border: 1px solid #000
     }
+    #circle_yellow_right {
+      width: 150px;
+      height: 150px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 125px;
+      background: yellow;
+	  border: 5px solid #090
+    }
       #circle_green {
       width: 150px;
       height: 150px;
@@ -35,6 +54,15 @@
       border-radius: 125px;
       background: green;
 	  border: 1px solid #000
+    }
+    #circle_green_right {
+      width: 150px;
+      height: 150px;
+      -webkit-border-radius: 25px;
+      -moz-border-radius: 25px;
+      border-radius: 125px;
+      background: green;
+	  border: 5px solid #090
     }
       #circle_grey {
       width: 150px;
@@ -74,6 +102,11 @@
     border-left: 0px;
     background-color: none;
     height: 150px;
+}
+#myCanvas
+{
+    display: block;
+    margin: 0 auto;
 }
 
     </style>
@@ -162,6 +195,9 @@
                    if (answer != randoms[i]) {
                       break;
                    }
+                   if (answer == 0) document.getElementById("circle_"+i).innerHTML = "<div id=\"circle_red_right\"></div>"; 
+                   if (answer == 1) document.getElementById("circle_"+i).innerHTML = "<div id=\"circle_yellow_right\"></div>";
+                   if (answer == 2) document.getElementById("circle_"+i).innerHTML = "<div id=\"circle_green_right\"></div>";
                    score++;
                }
                document.getElementById("result").innerHTML = drawTableByArray(randoms, 4, 5);
@@ -264,6 +300,9 @@
 			clearTimeout(time);
 			checkResult(min, sec, milisec);
 			document.getElementById("finish").style.display = "none";
+                       for (let i = 0; i < 20; i++) {
+                           document.getElementById(i).onclick = "";
+                       }
             }
 
 
@@ -283,9 +322,9 @@
 					  document.getElementById("nxt").style.display = "block";
                       return;
                    }                   
-                   drawCircle(60, 90, 50, 0, color[randoms[p]]);
-                   drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
-                   drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
+                   drawCircle(210, 90, 50, 0, color[randoms[p]]);
+                   drawCircle(350, 90, 50, 0, color[randoms[p+1]]);
+                   drawCircle(500, 90, 50, 0, color[randoms[p+2]]);
                    image.style.display = "block";
                    p += 3;
                    setTimeout(hide, 2000);
@@ -302,6 +341,7 @@
 	     }
              
              function phase3() {
+                   context.clearRect(0, 0, 700, 200);
                    drawCircle(60, 90, 50, 0, color[randoms[p]]);
                    drawCircle(200, 90, 50, 0, color[randoms[p+1]]);
                    drawCircle(350, 90, 50, 0, color[randoms[p+2]]);
